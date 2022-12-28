@@ -6,11 +6,14 @@
 
 using namespace std;
 
+
 typedef struct {
 	int u;
 	int v;
 	int weight;
 } edge;
+
+vector<edge> result;
 
 struct cmp_edges {
 	bool operator() (const edge &a, const edge &b) const {
@@ -21,22 +24,24 @@ struct cmp_edges {
 int get_head(int v, vector<int> &head) {
 	int p = head[v],
 		pp = head[p];
-	printf("%d, %d cona \n", v, p);
+	printf("%d, %d p and pp\n", p, pp); 
 	if (pp != p) {
 		head[v] = get_head(pp, head);
 		head[p] = head[v];
 	}
+	printf("%d, %d cona  %d\n", v, p, head[v]);
 	return head[v];
 }
 
 void unite(int u, int v, vector<int> &head, vector<int> &rank) {
-	if (rank[head[u]] > rank[head[v]]) {
+	printf("%d, %d, UNITING\n", u, v);
+	if (rank[u] > rank[v]) {
 		head[v] = head[u];
-	} else if (rank[head[u]] < rank[head[v]]) {
+	} else if (rank[u] < rank[v]) {
 		head[u] = head[v];
 	} else { // If they have the same rank
 		head[u] = head[v];
-		rank[head[v]]++;
+		rank[v]++;
 	}
 }
 
@@ -44,13 +49,16 @@ int kruskal(vector<int> &head, vector<int> &rank, vector<edge> &edges) {
 	vector<edge>::iterator iter;
 	int weight = 0;
 	for (iter = edges.begin(); iter != edges.end(); iter++) {
-		printf("%d, %d, %d alive\n", iter->u, iter->v, iter->weight);
+		printf("SOLVING %d, %d, %d alive\n", iter->u, iter->v, iter->weight);
 		int u = iter->u;
 		int v = iter->v;
 		printf("%d %d banana \n", u, v);
-		if (get_head(u, head) != get_head(v, head)) {
-			unite(u, v, head, rank);
+		int pu = get_head(u, head);
+		int pv = get_head(v, head);
+		if (pu != pv) {
+			unite(pu, pv, head, rank);
 			weight += iter->weight;
+			result.push_back(*iter);
 		}
 	}
 	return weight;
@@ -94,5 +102,8 @@ int main() {
 	}
 
 	cout << kruskal(heads, rank, edges) << " gay\n";
+	for (iter = result.begin(); iter != result.end(); iter++) {
+		printf("%d, %d, after\n", iter->u, iter->v);
+	}
 	return 0;
 }
