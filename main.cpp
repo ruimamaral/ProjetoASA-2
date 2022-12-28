@@ -6,46 +6,45 @@
 using namespace std;
 
 typedef struct {
-	public:
-		int u;
-		int v;
-		int weight;
+	int u;
+	int v;
+	int weight;
 } edge;
 
 struct cmp_edges {
-    bool operator() (const edge &a, const edge &b) const {
-        return a.weight < b.weight;
-    }
+	bool operator() (const edge &a, const edge &b) const {
+		return a.weight < b.weight;
+	}
 };
 
-int get_predecessor(int v, vector<int> pre) {
-	int p = pre[v], pp = pre[p];
+int get_head(int v, vector<int> &head) {
+	int p = head[v], pp = head[p];
 	if (pp != p) {
-		pre[v] = get_predecessor(pp, pre);
-		pre[p] = pre[v];
+		head[v] = get_head(pp, head);
+		head[p] = head[v];
 	}
-	return pre[v];
+	return head[v];
 }
 
-void unite(int u, int v, vector<int> pre, vector<int> rank) {
-	if (rank[pre[u]] > rank[pre[v]]) {
-		pre[v] = pre[u];
-	} else if (rank[pre[u]] < rank[pre[v]]) {
-		pre[u] = pre[v];
+void unite(int u, int v, vector<int> &head, vector<int> &rank) {
+	if (rank[head[u]] > rank[head[v]]) {
+		head[v] = head[u];
+	} else if (rank[head[u]] < rank[head[v]]) {
+		head[u] = head[v];
 	} else { // If they have the same rank
-		pre[u] = pre[v];
-		rank[pre[v]]++;
+		head[u] = head[v];
+		rank[head[v]]++;
 	}
 }
 
-int kruskal(vector<int> pre, vector<int> rank, set<edge, cmp_edges> edges) {
+int kruskal(vector<int> &head, vector<int> &rank, set<edge, cmp_edges> &edges) {
 	set<edge>::iterator iter;
 	int weight = 0;
 	for (iter = edges.begin(); iter != edges.end(); iter++) {
 		int u = iter->u;
 		int v = iter->v;
-		if (get_predecessor(u, pre) != get_predecessor(v, pre)) {
-			unite(u, v, pre, rank);
+		if (get_head(u, head) != get_head(v, head)) {
+			unite(u, v, head, rank);
 			weight += iter->weight;
 		}
 	}
@@ -58,7 +57,7 @@ int main() {
 	cin >> vs;
 	cin >> e;
 
-	vector<int> predecessors(vs);
+	vector<int> heads(vs);
 	vector<int> rank(vs);
 	set<edge, cmp_edges> edges;
 
@@ -72,10 +71,10 @@ int main() {
 		edges.insert((*new_edge));
 	}
 	for (int i = 0; i < vs; i++) {
-		predecessors[i] = i;
+		heads[i] = i;
 		rank[i] = 0;
 	}
 
-	cout << kruskal(predecessors, rank, edges) << "\n";
+	cout << kruskal(heads, rank, edges) << "\n";
 	return 0;
 }
