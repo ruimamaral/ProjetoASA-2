@@ -89,7 +89,6 @@ int main() {
 		heads[i] = i;
 		rank[i] = 0;
 	}
-	vector<edge>::iterator iter;
 
 	cout << kruskal(heads, rank, edges) << "\n";
 	return 0;
