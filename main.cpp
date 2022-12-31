@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 typedef struct {
 	int u;
 	int v;
@@ -62,10 +61,10 @@ int kruskal(vector<int> &head, vector<int> &rank, vector<edge> &edges) {
 int main() {
 	int e, vs;
 
-	cin >> vs;
-	cin >> e;
+	scanf("%d\n%d\n", &vs, &e);
 
 	if (vs == 0 || e == 0) {
+		printf("%d\n", 0);
 		return 0;
 	}
 
@@ -76,9 +75,7 @@ int main() {
 	for (int i = 0; i < e; i++) {
 		edge *new_edge;
 		int u, v, w;
-		cin >> u;
-		cin >> v;
-		cin >> w;
+		scanf("%d %d %d\n", &u, &v, &w);
 		new_edge = new edge {u, v, w};
 		edges[i] = ((*new_edge));
 	}
@@ -90,6 +87,6 @@ int main() {
 		rank[i] = 0;
 	}
 
-	cout << kruskal(heads, rank, edges) << "\n";
+	printf("%d\n", kruskal(heads, rank, edges));
 	return 0;
 }
