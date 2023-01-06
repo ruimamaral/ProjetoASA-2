@@ -22,7 +22,7 @@ df = pd.DataFrame([
 	columns=["edges", "time"])
 
 sns.set(rc={'figure.figsize':(10,6)})
-plot = sns.lineplot(x='edges', y='time', data=df, marker="o")
+plot = sns.lineplot(x='edges', y='time', data=df, marker="o", c="#b04c4c")
 plot.set_xlabel("Arestas")
 plot.set_ylabel("Tempo (ms)")
 plot.set_title("Complexidade Temporal")
